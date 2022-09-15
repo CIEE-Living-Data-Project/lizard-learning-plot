@@ -5,8 +5,23 @@
   # wouldn't overwrite these specific files, and one would have to change the names of the
   # files in downstream scripts to switch to using a new file.
 
-# The data being downloaded is from: Age-dependent social learning in a lizard (Noble et al. 2014)
-  # The doi is https://doi.org/10.5061/dryad.6rj28
+# Check to see if the data directory exists, and create it otherwise. If someone clones the
+  # repository from Git, it won't include the data folder since I don't want to include the 
+  # data in my repository, and empty directories aren't tracked by Git. Therefore, it should 
+  # be created. There is a potential problem here since RStudio projects automatically have 
+  # the project directory as the working directory, when I would otherwise expect the working 
+  # directory to be the scripts directory. I suppose the easiest way to solve that problem 
+  # would just be keeping the scripts in the main repository directory. Otherwise, I have to
+  # somehow check which case is true. I will return to this issue later, but for now will 
+  # assume the user has an RStudio project like me.
+
+if (dir.exists("data")==FALSE) {
+  dir.create("data")
+}
+
+# Download files with names and date stamps
+  # The data being downloaded is from: Age-dependent social learning in a lizard (Noble 
+  # et al. 2014). The doi is https://doi.org/10.5061/dryad.6rj28
 
 download.file(url="https://datadryad.org/stash/downloads/file_stream/49770",
               method="wget",
