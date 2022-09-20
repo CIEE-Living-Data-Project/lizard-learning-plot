@@ -1,0 +1,37 @@
+---
+title: "Lizard Learning Plot Manuscript"
+author: "Caleigh Charlebois"
+date: "2022-09-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Title:** Title Title
+
+Caleigh Charlebois^1^
+
+First author
+
+# Abstract
+
+# Introduction
+
+
+# Methods
+
+# Results
+
+# Discussion
+
+# References
+
+# Tables
+
+# Figure Captions
+
+# Figures
+
+# Appendices
