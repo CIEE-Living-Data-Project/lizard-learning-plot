@@ -2,27 +2,36 @@
 title: "Lizard Learning Plot Manuscript"
 author: "Caleigh Charlebois"
 date: "2022-09-15"
-output: html_document
+output: pdf_document
+latex_engine: "xelatex"
+geometry: margin=1in
+csl: "../references/biology-letters.csl"
+bibliography: "../references/lizard_learning_plot.bib"
+
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(readr)
+library(cowplot)
 ```
 
-**Title:** Title Title
+**Title:** Lizard Learning Plot
 
-Caleigh Charlebois^1^
+Caleigh Charlebois
 
-First author
 
 # Abstract
 
 # Introduction
 
-
 # Methods
 
 # Results
+```{r}
+lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
+```
 
 # Discussion
 
