@@ -22,3 +22,6 @@ Reproducibly plotting data from Age-dependent social learning in a lizard (Noble
   ├── README.md
   └── lizard-learning-plot.Rproj
 ```
+
+## Usage
+Run the R script "download_data.R" to download a timestamped copy of the data from dryad. Then, knit the "preregistration.Rmd" R markdown file to produce the manuscript.
