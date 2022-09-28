@@ -12,9 +12,27 @@ bibliography: "../references/lizard_learning_plot.bib"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(ggplot2)
-library(readr)
-library(cowplot)
+
+## Use groundhog to ensure package compatibility by loading most recent
+## versions of packages available on a certain date.
+
+# Check whether groundhog is installed and install it if it isn't.
+my_packages <- c("groundhog")
+not_installed <- my_packages[!(my_packages %in% installed.packages()[ , "Package"])]
+if(length(not_installed)) install.packages(not_installed) 
+rm(not_installed, my_packages)
+
+# Load groundhog and use it to install other packages. You may change the date
+# in the "date_for_packages" if you want to check results using another set of
+# plugin versions.
+date_for_packages <- "2022-09-11"
+library(groundhog)
+groundhog.library(c("ggplot2",
+                    "readr",
+                    "cowplot",
+                    "dplyr"),
+                  date_for_packages)
+rm(date_for_packages, r.need.full)
 ```
 
 **Title:** Lizard Learning Plot
@@ -31,6 +49,38 @@ Caleigh Charlebois
 # Results
 ```{r}
 lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
+
+ggplot( data = lizards, mapping = aes()) +
+  geom_histogram(aes(x=LT)) +
+  facet_grid(rows = vars(Age))
+```
+This was my initial plan -- Making a plot of the distribution of number of trials it took for the lizards to perform the task correctly, faceted by age. However, without polishing the plot and fixing the labels, I can see it won't be very exciting and isn't the best way to visualize this data.I didn't realize when I was making my plan that the  lizards would all learn the task in either 0 or 1 trial. 
+
+What else can I make a plot of which will be more interesting?
+
+```{r}
+lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
+
+ggplot(data = lizards, mapping = aes()) +
+  geom_histogram(aes(x=Lat_min1)) +
+  facet_grid(rows = vars(Age),
+             cols = vars(Treat)) +
+  labs(x="Time until correctly performed task",
+       y="Lizard count") +
+  theme_cowplot()
+```
+I find this idea pretty interesting, but I notice there are many data points at "60." I think this is because lizards who never completed the task correctly were recorded as taking 60 seconds, the maximum allotted time. Next, I will try creating a plot that removes lizards which never succeeded in performing the task by filtering the data.
+
+```{r}
+lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
+
+filter(lizards, correct.incorrect==1) %>%
+
+ggplot(mapping = aes()) +
+  geom_histogram(aes(x=Lat_min1)) +
+  facet_grid(rows = vars(Age),
+             cols = vars(Treat)) +
+  theme_cowplot()
 ```
 
 # Discussion
