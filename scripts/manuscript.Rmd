@@ -49,13 +49,8 @@ Caleigh Charlebois
 
 # Abstract
 
-# Introduction
 
-
-
-# Methods
-
-# Results
+# Data exploration and Plots
 ```{r}
 # Load the first lizard learning dataset
 
@@ -133,17 +128,80 @@ This plot gives a better idea of the distribution of task completion times for y
 ```{r}
 filter(lizards_1, Liz.ID=="*0302")
 ```
-Here, I have filtered the dataset by the "Liz.ID" variable because I was curious about the structure of the data. This has revealed something I didn't understand about the data before: Each entry is not a lizard, it's a specific trial the lizard underwent. Even though the data dictionary available on Dryad says that the "LT" or "Learning Trial" variable is "trials until the lizard learnt," it is only a binary entry. 
+Above, I have filtered the data set by the "Liz.ID" variable because I was curious about the structure of the data. This has revealed something I didn't understand about the data before: Each entry is not a lizard, it's a specific trial the lizard underwent. Even though the data dictionary available on Dryad says that the "LT" or "Learning Trial" variable is "trials until the lizard learnt," it is only a binary entry. 
 Maybe this means the variable is "1" when the lizard hasn't yet learned the task, and "0" once it has learned the task? I still find this confusing because the example lizard here appears to have correctly performed the task during trial 4 according to the "correct.incorrect" column. 
+Because I am not sure how to determine on which trial a lizard learned the task, I no longer want to work with the "learning trial" variable. Instead, what if I explore whether the demonstrator used to teach a lizard the task appears to impact the time it takes for the lizard to perform the task itself?
+
+```{r}
+
+lizards_1$correct.incorrect <- as.factor(lizards_1$correct.incorrect)
+
+ggplot(data = lizards_1, mapping = aes(x=Dem.ID, y=Lat_min1)) +
+# Create a jitter plot where points are colored by whether they represent
+# successful trials
+  geom_jitter(position=position_jitter(0.1),
+              aes(col=correct.incorrect),
+              alpha=0.5) +
+# Define the color scale and the labels it will have in the legend
+  scale_color_manual(values = c("red", "black"),
+                     labels = c("Incorrect", "Correct")) +
+# Use the cowplot theme for a cleaner result
+  theme_cowplot() +
+# Change the labels for the plot and add a title
+  labs(title="Task duration grouped by demonstrator",
+       x="Demonstrator ID",
+       y="Seconds until task performed",
+       col="Task result") +
+# Rotate the x axis labels by 90 degrees so that they do not overlap
+  theme(axis.text.x=element_text(angle= 90,
+                                 vjust= 0.5,
+                                 hjust= 1))
+
+ggplot(data = lizards_1, mapping = aes(x=Dem.ID, y=Lat_min1)) +
+# Create a boxplot where points are colored by whether they represent
+# successful trials
+  geom_boxplot() +
+# Use the cowplot theme for a cleaner result
+  theme_cowplot() +
+# Change the labels for the plot and add a title
+  labs(title="Task duration grouped by demonstrator",
+       x="Demonstrator ID",
+       y="Seconds until task performed",
+       col="Task result") +
+# Rotate the x axis labels by 90 degrees so that they do not overlap
+  theme(axis.text.x=element_text(angle= 90,
+                                 vjust= 0.5,
+                                 hjust= 1))
+```
+I like how these two plots came out! I decided to plot the data both as a jitter plot and a box plot, because the box plot made it difficult to gauge how many failed attempts were clustered together at the top of the plot. The box plot makes it clearer that the lizards following each demonstrator didn't perform the same. Some of the demonstrators, specifically 198174 and 201191, seemed to have a lot of success in demonstrating the task because many of their followers did it quickly. In contrast, others had most of their followers not succeed at all.
+
+```{r}
+
+# Use the filter function to remove trials in which lizards were unsuccessful
+filter(lizards_1, correct.incorrect==1) %>%
+
+ggplot(mapping = aes(x=Dem.ID, y=Lat_min1)) +
+  geom_boxplot() +
+  theme_cowplot() +
+  labs(title="Task duration grouped by demonstrator",
+       x="Demonstrator ID",
+       y="Seconds until task performed",
+       col="Task result") +
+  theme(axis.text.x=element_text(angle= 90,
+                                 vjust= 0.5,
+                                 hjust= 1))
+```
+When unsuccessful trials are removed, as above, there is still quite a bit of variation. I am surprised by the distribution of times here: It seems like, for the most part, lizards performed the task quickly if they were going to do it correctly rather than forming a normal distribution around an intermediate average time. 
 
 # Discussion
+Though this exercise reinforced my understanding of the ggplot plotting syntax and dplyr functions, my main takeaway was actually the difficulty I had in interpreting the meaning of the variables in the tabular data. When I chose this dataset, I thought it would be easy to understand because I saw that the authors had taken the time to describe their variables on dryad. When I actually went to work with the data, however, I found that some variables were still not adequately explained. Most problematically, I wasn't able  to figure out how the "LT" and "correct.incorrect" columns combined to characterize how many trials it took before a lizard learned the task. Not understanding the variables makes it difficult to know which apparent discrepancies are due to errors in the data and which ones are legitimate unexpected results.
+
+The fact that the authors reported the duration of failed tasks as 60 seconds also made the data more difficult to work with. I would expect failed tasks to have a time of "N/A" based on their description of the variable, which was "time from start of trial to the point when the lizard successfully flipped the yellow lid."
+
+I would also like to acknowledge the discrepancy between the plot that I am happy with and what I anticipated I would be doing when I created my preregistration. In the preregistration, I predicted that "lizard age [would] positively correlate with performing the lid-flipping task correctly on the first attempt." In my final manuscript, I have instead visualized how the distribution of times it has taken for the lizards to perform their tasks varies when the task was demonstrated with different demonstrator lizards. In a typical study, a departure from the pre-registration based on which data seemed most interesting to plot would be ridiculous. However, I feel comfortable departing in this case because the true objective of the project is to become comfortable with reproducible science.
+
+Overall, I consider this project a success. I have become more comfortable with skills that I think will make my thesis project better and more reproducible. For example, I have been creating pipeline scripts to use bioinformatics tools on the Compute Canada cluster, and currently have no record of the ways I have edited these scripts over time. When I accidentally break something or need to debug a script, I am in a precarious position of needing to remember what I did before. This course has reminded me how valuable it will be to create a git repository tracking changes in the scripts I create on the cluster, and properly document the purposes and provenances of my scripts with readme files. 
+
+Additionally, I previously saw R Markdown documents as relatively rudimentary, and hadn't seen the visual editor in RStudio at all. Through conducting this project, I learned how my workflow could integrate my citation manager with R Markdown citations. I also had the opportunity to see that R Markdown manuscripts are more customizable than I previously thought.
 
 # References
-
-# Tables
-
-# Figure Captions
-
-# Figures
-
-# Appendices
