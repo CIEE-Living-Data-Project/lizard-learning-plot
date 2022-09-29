@@ -23,12 +23,24 @@ if (dir.exists("data")==FALSE) {
   # The data being downloaded is from: Age-dependent social learning in a lizard (Noble 
   # et al. 2014). The doi is https://doi.org/10.5061/dryad.6rj28
 
+data_date <- Sys.Date()
+
+data_names <- c(paste0('data/', 'data_T1_final_', 'downloaded_', data_date, '.csv'),
+                paste0('data/', 'data_T2_final_', 'downloaded_', data_date, '.csv'))
+
 download.file(url="https://datadryad.org/stash/downloads/file_stream/49770",
               method="wget",
               quiet=FALSE,
-              destfile=paste0('data/', 'data_T1_final_', 'downloaded_', Sys.Date(), '.csv'))
+              destfile=data_names[1])
               
 download.file(url="https://datadryad.org/stash/downloads/file_stream/49771",
               method="wget",
               quiet=FALSE,
-              destfile=paste0('data/', 'data_T2_final_', 'downloaded_', Sys.Date(), '.csv'))
+              destfile=data_names[2])
+
+# Print downloaded file names to text files so that they can be accessed in the
+  # manuscript R markdown script. The fact that I put Sys.Date in a variable at
+  # the beginning means that it will be the same as above even if it is midnight.
+
+write(data_names,
+      file="data/data_names.txt")

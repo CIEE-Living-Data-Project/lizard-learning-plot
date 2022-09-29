@@ -33,6 +33,13 @@ groundhog.library(c("ggplot2",
                     "dplyr"),
                   date_for_packages)
 rm(date_for_packages, r.need.full)
+
+# Read vector with names of data files (with dates added by data downloading 
+# script) that can be indexed to get the names of both data files in the
+# directory.
+
+data_names <- read_lines("../data/data_names.txt")
+
 ```
 
 **Title:** Lizard Learning Plot
@@ -44,13 +51,17 @@ Caleigh Charlebois
 
 # Introduction
 
+
+
 # Methods
 
 # Results
 ```{r}
-lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
+# Load the first lizard learning dataset
 
-ggplot( data = lizards, mapping = aes()) +
+lizards_1 <- read_csv(paste0("../", data_names[1]))
+
+ggplot( data = lizards_1, mapping = aes()) +
   geom_histogram(aes(x=LT)) +
   facet_grid(rows = vars(Age))
 ```
@@ -59,29 +70,71 @@ This was my initial plan -- Making a plot of the distribution of number of trial
 What else can I make a plot of which will be more interesting?
 
 ```{r}
-lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
+# Create a labelling function that will allow me to choose more readable facet
+# labels for  "Age" and "Treatment" functions. Otherwise, the facets will be
+# labeled using the abbreviations the authors chose. For example, simply "O"
+# for "Old" and "SL" for "social demonstration."
 
-ggplot(data = lizards, mapping = aes()) +
+age_labels <- list(
+  'Y'='Young',
+  'O'='Old'
+)
+
+plot_labeller <- function(variable, value){
+  if (variable=='Age') {
+    return(age_labels[value])
+  } else {
+    return(treat_labels[value])
+  }
+}
+
+treat_labels <- list(
+  'SL' = 'Social Demonstration',
+  'C' = 'Control'
+)
+
+treat_labeller <- function(variable, value){
+  return(treat_labels[value])
+}
+
+# Create a plot of the data with ggplot, facet with the facet_grid function,
+# and use the cowplot theme. Specify the labeler I created above.
+
+ggplot(data = lizards_1, mapping = aes()) +
   geom_histogram(aes(x=Lat_min1)) +
   facet_grid(rows = vars(Age),
-             cols = vars(Treat)) +
+             cols = vars(Treat),
+             labeller = plot_labeller) +
+  labs(x="Time until correctly performed task",
+       y="Lizard count") +
+  theme_cowplot()
+
+```
+I chose to make the x axis the time elapsed until the lizard correctly performed the task rather than simply whether they performed it correctly or not. I also changed the theme of the plot to the cowplot theme, which is visually cleaner.
+
+I find this idea pretty interesting, but I notice there are many data points at "60." I think this is because lizards who never completed the task correctly were recorded as taking 60 seconds, the maximum allotted time. Next, I will try creating a plot that removes lizards which never succeeded in performing the task by filtering the data.
+
+```{r}
+filter(lizards_1, correct.incorrect==1) %>%
+
+ggplot(mapping = aes()) +
+  geom_histogram(aes(x=Lat_min1),
+                 binwidth = 1) +
+  facet_grid(rows = vars(Age),
+             cols = vars(Treat),
+             labeller = plot_labeller) +
   labs(x="Time until correctly performed task",
        y="Lizard count") +
   theme_cowplot()
 ```
-I find this idea pretty interesting, but I notice there are many data points at "60." I think this is because lizards who never completed the task correctly were recorded as taking 60 seconds, the maximum allotted time. Next, I will try creating a plot that removes lizards which never succeeded in performing the task by filtering the data.
+
+This plot gives a better idea of the distribution of task completion times for young and old lizards. Based on this plot alone, it appears that a higher percentage of old lizards performed the task more quickly when social demonstration was available, while younger lizards tended to perform the task more quickly without social demonstration. However, it is worth noting that in this step, I removed lizards that didn't learn the task at all.
 
 ```{r}
-lizards <- read_csv("../data/data_T1_final_downloaded_2022-09-14.csv")
-
-filter(lizards, correct.incorrect==1) %>%
-
-ggplot(mapping = aes()) +
-  geom_histogram(aes(x=Lat_min1)) +
-  facet_grid(rows = vars(Age),
-             cols = vars(Treat)) +
-  theme_cowplot()
+filter(lizards_1, Liz.ID=="*0302")
 ```
+Here, I have filtered the dataset by the "Liz.ID" variable because I was curious about the structure of the data. This has revealed something I didn't understand about the data before: Each entry is not a lizard, it's a specific trial the lizard underwent. Even though the data dictionary available on Dryad says that the "LT" or "Learning Trial" variable is "trials until the lizard learnt," it is only a binary entry. 
+Maybe this means the variable is "1" when the lizard hasn't yet learned the task, and "0" once it has learned the task? I still find this confusing because the example lizard here appears to have correctly performed the task during trial 4 according to the "correct.incorrect" column. 
 
 # Discussion
 
