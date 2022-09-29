@@ -7,7 +7,7 @@ latex_engine: "xelatex"
 geometry: margin=1in
 csl: "../references/biology-letters.csl"
 bibliography: "../references/lizard_learning_plot.bib"
-
+nocite: '@*'
 ---
 
 ```{r setup, include=FALSE}
@@ -47,8 +47,13 @@ data_names <- read_lines("../data/data_names.txt")
 Caleigh Charlebois
 
 
-# Abstract
-
+# Introduction
+Most research on Australian skinks has focused on conservation strategies<citation> and their reproductive anatomy as live-bearing reptiles<cite>. In contrast, the data I am exploring and visualizing in this project records a phenomenon that is often dismissed in reptiles: social learning<citation>. Though reptiles are less likely than mammals and birds to live social lifestyles, this paper posits that there may still be a selective advantage to social learning: Lizards may be able to glean information about accessing the resources and avoiding the dangers of their environment by watching other individuals, even if they are otherwise antisocial<citation>.
+In this study, researchers tested skinks' performance in two social learning tasks. In both tasks, lizards were placed in an enclosure with a food motivation (a mealworm) underneath a colored lid. The task was to flip the lid over to access the worm inside.
+In the experimental group, the skinks were allowed to watch a trained demonstrator skink engage in the tasks for one hour prior to attempting the tasks themselves. The control group was allowed to observe the demonstrator lizard in its enclosure but not performing the tasks.
+Task 1 was an instrumental task, in which a single yellow lid was present and needed to be overturned to access the worm. Task 2 was a more involved association task, in which lizards had to select either a blue or white lid, with only the blue lid hiding an accessible worm. 
+The authors concluded that young lizards seemed to benefit from social learning by performing the task more quickly when they had the opportunity to observe the demonstrator lizard performing it first, while older lizards had similar outcomes whether they observed the demonstrator lizard performing the task or not.
+In this project, I will be exploring the data researchers collected as part of task 1, also called the instrumental task. I will explore ways of visualizing the data using the ggplot2 package with specific attention to the facet_grid() function.
 
 # Data exploration and Plots
 ```{r}
