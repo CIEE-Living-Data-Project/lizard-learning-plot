@@ -6,8 +6,6 @@ Reproducibly plotting data from Age-dependent social learning in a lizard (Noble
 ```
   ├── data
   │   └── _README.md
-  ├── plots
-  │   └── _README.md
   ├── references
   │   ├── _README.md
   │   ├── biology-letters.cls
@@ -16,12 +14,12 @@ Reproducibly plotting data from Age-dependent social learning in a lizard (Noble
   │   ├── _README.md
   │   ├── download_data.R
   │   ├── manuscript.Rmd
-  │   ├── package_management.R
   │   └── preregistration.Rmd
+  ├── .gitignore
   ├── LICENSE
-  ├── README.md
+  ├── _README.md
   └── lizard-learning-plot.Rproj
 ```
 
 ## Usage
-Run the R script "download_data.R" to download a timestamped copy of the data from dryad. Then, knit the "preregistration.Rmd" R markdown file to produce the manuscript.
+Run the R script "download_data.R" to download a timestamped copy of the data from dryad. Make alterations to the data or "manuscript.Rmd" file if desired. Then, knit the "manuscript.Rmd" R markdown file to produce the manuscript.
